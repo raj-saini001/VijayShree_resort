@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 import './App.css';
 import heroImg from './assets/heroimg.png';
 import aboutImg from './assets/aboutimg.png';
@@ -93,6 +94,28 @@ function App() {
   const { activeSection, scrollToSection } = useSectionNavigation(SECTION_IDS);
   const { isOpen, selectedFacility, openModal, closeModal } = useFacilityModal();
   const { isVisible, isAtTop } = useNavbarVisibility();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [isMobileMenuOpen]);
+
+  const handleMobileNavClick = (index) => {
+    setIsMobileMenuOpen(false);
+    setTimeout(() => {
+      scrollToSection(index);
+    }, 100);
+  };
   
   const handleBookingSubmit = (e) => {
     e.preventDefault();
@@ -151,7 +174,9 @@ function App() {
         onDown={() => scrollToSection(activeSection + 1)} 
       />
       <div className="container">
-        <div className="watermark">Vijay Shree</div>
+        <div className="watermark-container" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+          <div className="watermark">Vijay Shree</div>
+        </div>
       
       <motion.nav 
         className={`navbar navbar-sticky-wrapper ${!isAtTop ? 'scrolled' : ''}`}
@@ -159,7 +184,7 @@ function App() {
         animate={{ y: isVisible ? 0 : '-100%' }}
         transition={{ duration: 0.3, ease: 'easeInOut' }}
       >
-        <ul className="nav-links left-links">
+        <ul className="nav-links left-links desktop-only">
           <li>
             <button 
               className={activeSection === 0 ? 'active-link' : ''} 
@@ -197,14 +222,93 @@ function App() {
           <span>RESORT</span>
         </div>
         
-        <div className="nav-contact">
+        <div className="nav-contact desktop-only">
           <button 
             onClick={() => scrollToSection(4)} 
             style={{ background: 'none', border: 'none', font: 'inherit', cursor: 'pointer', textDecoration: 'none' }}
           >Contact</button>
           <a href="tel:1-800-123-4567" className="phone">7974119727</a>
         </div>
+        
+        <button 
+          className="mobile-menu-btn mobile-only" 
+          onClick={() => setIsMobileMenuOpen(true)}
+          aria-label="Open mobile menu"
+        >
+          <Menu size={28} color="var(--text-primary)" />
+        </button>
       </motion.nav>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            className="mobile-menu-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={(e) => {
+              if (e.target.classList.contains('mobile-menu-overlay')) {
+                setIsMobileMenuOpen(false);
+              }
+            }}
+          >
+            <motion.div 
+              className="mobile-menu-panel"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <button 
+                className="close-menu-btn"
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close mobile menu"
+              >
+                <X size={32} color="var(--text-primary)" />
+              </button>
+              
+              <ul className="mobile-nav-links">
+                <li>
+                  <button 
+                    className={activeSection === 0 ? 'active-link' : ''} 
+                    onClick={() => handleMobileNavClick(0)}
+                  >HOME</button>
+                </li>
+                <li>
+                  <button 
+                    className={activeSection === 1 ? 'active-link' : ''} 
+                    onClick={() => handleMobileNavClick(1)}
+                  >ABOUT</button>
+                </li>
+                <li>
+                  <button 
+                    className={activeSection === 2 ? 'active-link' : ''} 
+                    onClick={() => handleMobileNavClick(2)}
+                  >FACILITIES</button>
+                </li>
+                <li>
+                  <button 
+                    className={activeSection === 3 ? 'active-link' : ''} 
+                    onClick={() => handleMobileNavClick(3)}
+                  >PACKAGES</button>
+                </li>
+                <li>
+                  <button 
+                    className={activeSection === 4 ? 'active-link' : ''} 
+                    onClick={() => handleMobileNavClick(4)}
+                  >ENQUIRE</button>
+                </li>
+              </ul>
+              
+              <div className="mobile-menu-footer">
+                <p>Reserve Your Venue</p>
+                <a href="tel:1-800-123-4567" className="phone">7974119727</a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <main className="hero" id="home">
         <div className="carousel-indicator-spacer" style={{ width: '50px' }}></div>
