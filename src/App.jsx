@@ -9,6 +9,8 @@ import facilityGuestHall from './assets/facility_guest_hall.png';
 import facilityGarden from './assets/facility_garden.png';
 import facilityParking from './assets/facility_parking.png';
 import facilityKitchen from './assets/facility_kitchen.png';
+import FacilityDetailsModal from './components/modals/FacilityDetailsModal';
+import { useFacilityModal } from './hooks/useFacilityModal';
 
 const SECTION_IDS = ['home', 'about', 'facilities', 'pricing', 'contact'];
 
@@ -80,15 +82,31 @@ const SectionNavigator = ({ current, total, onUp, onDown }) => {
 
 function App() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState('');
   const { activeSection, scrollToSection } = useSectionNavigation(SECTION_IDS);
+  const { isOpen, selectedFacility, openModal, closeModal } = useFacilityModal();
   
   const handleBookingSubmit = (e) => {
     e.preventDefault();
     setIsSubmitted(true);
   };
 
+  const handleBookFacility = (packageValue) => {
+    closeModal();
+    if (packageValue) {
+      setSelectedPackage(packageValue);
+    }
+    scrollToSection(SECTION_IDS.indexOf('contact'));
+  };
+
   return (
     <>
+      <FacilityDetailsModal 
+        isOpen={isOpen} 
+        facility={selectedFacility} 
+        onClose={closeModal} 
+        onBook={handleBookFacility} 
+      />
       <SectionNavigator 
         current={activeSection + 1} 
         total={SECTION_IDS.length} 
@@ -213,7 +231,7 @@ function App() {
               </ul>
               <div className="facility-meta">
                 <span className="capacity">Up to 1000 Guests</span>
-                <button className="text-btn">Learn More &rsaquo;</button>
+                <button className="text-btn" onClick={() => openModal('banquet')}>Learn More &rsaquo;</button>
               </div>
             </div>
           </motion.div>
@@ -240,7 +258,7 @@ function App() {
                 </ul>
                 <div className="facility-meta">
                   <span className="capacity">50+ Premium Rooms</span>
-                  <button className="text-btn">Learn More &rsaquo;</button>
+                  <button className="text-btn" onClick={() => openModal('rooms')}>Learn More &rsaquo;</button>
                 </div>
               </div>
             </motion.div>
@@ -266,7 +284,7 @@ function App() {
                 </ul>
                 <div className="facility-meta">
                   <span className="capacity">Up to 200 Guests</span>
-                  <button className="text-btn">Learn More &rsaquo;</button>
+                  <button className="text-btn" onClick={() => openModal('guest_hall')}>Learn More &rsaquo;</button>
                 </div>
               </div>
             </motion.div>
@@ -297,7 +315,7 @@ function App() {
                 </ul>
                 <div className="facility-meta">
                   <span className="capacity">Full Service</span>
-                  <button className="text-btn">Learn More &rsaquo;</button>
+                  <button className="text-btn" onClick={() => openModal('kitchen')}>Learn More &rsaquo;</button>
                 </div>
               </div>
             </motion.div>
@@ -323,7 +341,7 @@ function App() {
                 </ul>
                 <div className="facility-meta">
                   <span className="capacity">Up to 500 Guests</span>
-                  <button className="text-btn">Learn More &rsaquo;</button>
+                  <button className="text-btn" onClick={() => openModal('garden')}>Learn More &rsaquo;</button>
                 </div>
               </div>
             </motion.div>
@@ -349,7 +367,7 @@ function App() {
                 </ul>
                 <div className="facility-meta">
                   <span className="capacity">300+ Vehicles</span>
-                  <button className="text-btn">Learn More &rsaquo;</button>
+                  <button className="text-btn" onClick={() => openModal('parking')}>Learn More &rsaquo;</button>
                 </div>
               </div>
             </motion.div>
@@ -529,7 +547,11 @@ function App() {
                   
                   <div className="form-group full-width">
                     <label>Package Selection</label>
-                    <select className="form-control">
+                    <select 
+                      className="form-control"
+                      value={selectedPackage}
+                      onChange={(e) => setSelectedPackage(e.target.value)}
+                    >
                       <option value="">Select a Package</option>
                       <option value="Building">Building Package – ₹11,000</option>
                       <option value="Garden">Garden Package – ₹11,000</option>
