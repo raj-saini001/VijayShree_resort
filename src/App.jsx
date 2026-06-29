@@ -576,7 +576,7 @@ function App() {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <h3 className="pricing-title">🏢 Building Package</h3>
-            <div className="pricing-price">₹11,000</div>
+            <div className="pricing-price">₹21,000</div>
             <ul className="pricing-features">
               <li><span className="check">✔</span> Luxury Rooms</li>
               <li><span className="check">✔</span> Guest Hall</li>
@@ -600,7 +600,7 @@ function App() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h3 className="pricing-title">🌿 Garden Package</h3>
-            <div className="pricing-price">₹11,000</div>
+            <div className="pricing-price">₹21,000</div>
             <ul className="pricing-features">
               <li><span className="check">✔</span> Garden</li>
               <li><span className="check">✔</span> Banquet Hall</li>
@@ -760,8 +760,8 @@ function App() {
                       onChange={(e) => setSelectedPackage(e.target.value)}
                     >
                       <option value="">Select a Package</option>
-                      <option value="Building">Building Package – ₹11,000</option>
-                      <option value="Garden">Garden Package – ₹11,000</option>
+                      <option value="Building">Building Package – ₹21,000</option>
+                      <option value="Garden">Garden Package – ₹21,000</option>
                       <option value="Premium">Premium Celebration Package – ₹31,000</option>
                       <option value="Custom">Need a Custom Package</option>
                     </select>
