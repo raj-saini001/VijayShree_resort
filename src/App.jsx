@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import './App.css';
 import heroImg from './assets/heroimg.png';
@@ -11,6 +11,7 @@ import facilityParking from './assets/facility_parking.png';
 import facilityKitchen from './assets/facility_kitchen.png';
 import FacilityDetailsModal from './components/modals/FacilityDetailsModal';
 import { useFacilityModal } from './hooks/useFacilityModal';
+import { useNavbarVisibility } from './hooks/useNavbarVisibility';
 
 const SECTION_IDS = ['home', 'about', 'facilities', 'pricing', 'contact'];
 
@@ -83,8 +84,15 @@ const SectionNavigator = ({ current, total, onUp, onDown }) => {
 function App() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState('');
+  const [additionalRequirements, setAdditionalRequirements] = useState('');
+  const [highlightForm, setHighlightForm] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const nameInputRef = useRef(null);
+  const formRef = useRef(null);
+  
   const { activeSection, scrollToSection } = useSectionNavigation(SECTION_IDS);
   const { isOpen, selectedFacility, openModal, closeModal } = useFacilityModal();
+  const { isVisible, isAtTop } = useNavbarVisibility();
   
   const handleBookingSubmit = (e) => {
     e.preventDefault();
@@ -97,6 +105,35 @@ function App() {
       setSelectedPackage(packageValue);
     }
     scrollToSection(SECTION_IDS.indexOf('contact'));
+  };
+
+  const handleScrollToForm = (packageValue, toastText, subjectText = '') => {
+    setSelectedPackage(packageValue);
+    setAdditionalRequirements(subjectText);
+    
+    const showToastAndFocus = () => {
+      setToastMessage(toastText);
+      setHighlightForm(true);
+      nameInputRef.current?.focus();
+      setTimeout(() => setHighlightForm(false), 2000);
+      setTimeout(() => setToastMessage(''), 3000);
+    };
+
+    if (formRef.current) {
+      const rect = formRef.current.getBoundingClientRect();
+      const isVisible = rect.top >= 0 && rect.top <= window.innerHeight - 100;
+      
+      if (!isVisible) {
+        scrollToSection(SECTION_IDS.indexOf('contact'));
+        setTimeout(showToastAndFocus, 800);
+      } else {
+        showToastAndFocus();
+      }
+    }
+  };
+
+  const handleCustomQuote = () => {
+    handleScrollToForm('Custom', 'Custom Package selected. Please complete your enquiry.', 'Subject: Custom Package Enquiry\n');
   };
 
   return (
@@ -116,13 +153,43 @@ function App() {
       <div className="container">
         <div className="watermark">Vijay Shree</div>
       
-      <nav className="navbar">
+      <motion.nav 
+        className={`navbar navbar-sticky-wrapper ${!isAtTop ? 'scrolled' : ''}`}
+        initial={{ y: 0 }}
+        animate={{ y: isVisible ? 0 : '-100%' }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
         <ul className="nav-links left-links">
-          <li><a href="#home">HOME</a></li>
-          <li><a href="#rooms">ABOUT</a></li>
-          <li><a href="#dining">FACILITIES</a></li>
-          <li><a href="#events">PACKAGES</a></li>
-          <li><a href="#events">ENQUIRE</a></li>
+          <li>
+            <button 
+              className={activeSection === 0 ? 'active-link' : ''} 
+              onClick={() => scrollToSection(0)}
+            >HOME</button>
+          </li>
+          <li>
+            <button 
+              className={activeSection === 1 ? 'active-link' : ''} 
+              onClick={() => scrollToSection(1)}
+            >ABOUT</button>
+          </li>
+          <li>
+            <button 
+              className={activeSection === 2 ? 'active-link' : ''} 
+              onClick={() => scrollToSection(2)}
+            >FACILITIES</button>
+          </li>
+          <li>
+            <button 
+              className={activeSection === 3 ? 'active-link' : ''} 
+              onClick={() => scrollToSection(3)}
+            >PACKAGES</button>
+          </li>
+          <li>
+            <button 
+              className={activeSection === 4 ? 'active-link' : ''} 
+              onClick={() => scrollToSection(4)}
+            >ENQUIRE</button>
+          </li>
         </ul>
         
         <div className="logo">
@@ -131,10 +198,13 @@ function App() {
         </div>
         
         <div className="nav-contact">
-          <a href="#contact">Contact</a>
+          <button 
+            onClick={() => scrollToSection(4)} 
+            style={{ background: 'none', border: 'none', font: 'inherit', cursor: 'pointer', textDecoration: 'none' }}
+          >Contact</button>
           <a href="tel:1-800-123-4567" className="phone">7974119727</a>
         </div>
-      </nav>
+      </motion.nav>
 
       <main className="hero" id="home">
         <div className="carousel-indicator-spacer" style={{ width: '50px' }}></div>
@@ -257,7 +327,7 @@ function App() {
                   <li>Panoramic Views</li>
                 </ul>
                 <div className="facility-meta">
-                  <span className="capacity">50+ Premium Rooms</span>
+                  <span className="capacity">5+ Premium Rooms</span>
                   <button className="text-btn" onClick={() => openModal('rooms')}>Learn More &rsaquo;</button>
                 </div>
               </div>
@@ -283,7 +353,7 @@ function App() {
                   <li>Private Lounge Area</li>
                 </ul>
                 <div className="facility-meta">
-                  <span className="capacity">Up to 200 Guests</span>
+                  <span className="capacity">Up to 00 Guests</span>
                   <button className="text-btn" onClick={() => openModal('guest_hall')}>Learn More &rsaquo;</button>
                 </div>
               </div>
@@ -340,7 +410,7 @@ function App() {
                   <li>Romantic Fairy Lighting</li>
                 </ul>
                 <div className="facility-meta">
-                  <span className="capacity">Up to 500 Guests</span>
+                  <span className="capacity">Up to 2000 Guests</span>
                   <button className="text-btn" onClick={() => openModal('garden')}>Learn More &rsaquo;</button>
                 </div>
               </div>
@@ -409,7 +479,12 @@ function App() {
               <li><span className="check">✔</span> Banquet Hall</li>
               <li><span className="check">✔</span> Kitchen</li>
             </ul>
-            <button className="cta-btn">Book Now</button>
+            <button 
+              className="cta-btn" 
+              onClick={() => handleScrollToForm('Building', 'Building Package selected. Please complete the enquiry form.')}
+            >
+              Book Now
+            </button>
           </motion.div>
 
           {/* Card 2 */}
@@ -428,7 +503,12 @@ function App() {
               <li><span className="check">✔</span> Kitchen</li>
               <li><span className="check">✔</span> Parking</li>
             </ul>
-            <button className="cta-btn">Book Now</button>
+            <button 
+              className="cta-btn" 
+              onClick={() => handleScrollToForm('Garden', 'Garden Package selected. Please complete the enquiry form.')}
+            >
+              Book Now
+            </button>
           </motion.div>
 
           {/* Card 3 (Highlighted) */}
@@ -445,12 +525,17 @@ function App() {
             <ul className="pricing-features">
               <li><span className="check">✔</span> Luxury Rooms</li>
               <li><span className="check">✔</span> Guest Hall</li>
-              <li><span className="check">✔</span> Garden</li>
               <li><span className="check">✔</span> Banquet Hall</li>
               <li><span className="check">✔</span> Kitchen</li>
+              <li><span className="check">✔</span> Garden</li>
               <li><span className="check">✔</span> Parking</li>
             </ul>
-            <button className="cta-btn">Book Now</button>
+            <button 
+              className="cta-btn" 
+              onClick={() => handleScrollToForm('Premium', 'Premium Celebration Package selected. Please complete the enquiry form.')}
+            >
+              Book Now
+            </button>
           </motion.div>
         </div>
 
@@ -465,7 +550,7 @@ function App() {
           <p className="pricing-bottom-text">
             Looking for a customized package? Contact us to create the perfect package based on your event requirements.
           </p>
-          <button className="cta-btn pricing-bottom-btn">Get a Free Quote</button>
+          <button className="cta-btn pricing-bottom-btn" onClick={handleCustomQuote}>Get a Free Quote</button>
           <p className="pricing-disclaimer">
             Prices may vary depending on event requirements, decorations, and seasonal availability. Please contact us for the latest pricing and booking details.
           </p>
@@ -489,7 +574,25 @@ function App() {
             </div>
           </div>
           
-          <div className="booking-form-side">
+          <div className="booking-form-side" ref={formRef} style={{ position: 'relative' }}>
+            {toastMessage && (
+              <motion.div 
+                className="custom-toast"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+              >
+                {toastMessage}
+              </motion.div>
+            )}
+            <motion.div 
+              className={`form-highlight-wrapper ${highlightForm ? 'highlighted' : ''}`}
+              animate={{ 
+                boxShadow: highlightForm ? '0 0 0 4px rgba(97, 87, 143, 0.3)' : '0 0 0 0px rgba(97, 87, 143, 0)'
+              }}
+              transition={{ duration: 0.5 }}
+              style={{ borderRadius: '8px', padding: highlightForm ? '1rem' : '0' }}
+            >
             {isSubmitted ? (
               <motion.div 
                 className="success-message"
@@ -509,7 +612,7 @@ function App() {
                 <div className="form-grid">
                   <div className="form-group">
                     <label>Full Name *</label>
-                    <input type="text" className="form-control" placeholder="John Doe" required />
+                    <input type="text" className="form-control" placeholder="John Doe" required ref={nameInputRef} />
                   </div>
                   
                   <div className="form-group">
@@ -562,7 +665,13 @@ function App() {
                   
                   <div className="form-group full-width">
                     <label>Additional Requirements</label>
-                    <textarea className="form-control" placeholder="Tell us more about your event..." rows="3"></textarea>
+                    <textarea 
+                      className="form-control" 
+                      placeholder="Tell us more about your event..." 
+                      rows="3"
+                      value={additionalRequirements}
+                      onChange={(e) => setAdditionalRequirements(e.target.value)}
+                    ></textarea>
                   </div>
                 </div>
                 
@@ -576,6 +685,7 @@ function App() {
                 </button>
               </form>
             )}
+            </motion.div>
           </div>
         </motion.div>
       </section>

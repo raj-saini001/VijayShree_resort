@@ -20,18 +20,17 @@ export const facilitiesData = [
       'Opulent Crystal Chandeliers',
       'Premium Stage & Sound System',
       'Customizable Luxury Decor',
-      'Dedicated Event Manager',
       'Fully Air Conditioned',
       'Professional Lighting setup'
     ],
-    capacity: 'Up to 1000 Guests',
+    capacity: 'Up to 500 Guests',
     tags: ['Wedding', 'Reception', 'Corporate Event', 'Anniversary'],
-    amenities: ['Air Conditioning', 'Stage', 'WiFi', 'Decoration', 'Power Backup'],
+    amenities: ['Air Conditioning', 'Stage', 'Water Supply','Decoration', 'Power Backup'],
     value: 'Premium' // For dropdown mapping
   },
   {
     id: 'rooms',
-    title: 'Luxury Rooms & Suites',
+    title: 'Luxury Rooms',
     description: 'Experience unparalleled comfort in our luxury rooms and suites. Whether you are hosting out-of-town guests or preparing for your big day, our accommodations provide a serene and plush environment. Enjoy 24/7 room service, panoramic views, and premium amenities that make every stay spectacular.',
     images: [
       facilityRoom,
@@ -44,11 +43,10 @@ export const facilitiesData = [
       'Panoramic Views',
       'En-suite Luxury Bathrooms',
       'High-speed Internet Access',
-      'Smart TV & Entertainment'
     ],
-    capacity: '50+ Premium Rooms',
+    capacity: '5+ Premium Rooms',
     tags: ['Accommodation', 'Guest Stay', 'Bridal Suite'],
-    amenities: ['WiFi', 'Air Conditioning', 'Room Service', 'Power Backup', 'Laundry'],
+    amenities: ['Air Conditioning', 'Room Service', 'Power Backup', 'Attach Bathroom'],
     value: 'Building'
   },
   {
@@ -63,19 +61,18 @@ export const facilitiesData = [
     features: [
       'Intimate Elegant Setting',
       'In-house Catering Support',
-      'Private Lounge Area',
       'Premium Interior Finish',
       'Luxury Seating Arrangements'
     ],
-    capacity: 'Up to 200 Guests',
+    capacity: 'Up to 40 Guests',
     tags: ['Birthday Party', 'Anniversary', 'Family Function', 'Pre-wedding Rituals'],
-    amenities: ['Air Conditioning', 'WiFi', 'Dining Area', 'Decoration'],
+    amenities: ['Air Conditioning', 'Attach Bathroom', 'Decoration'],
     value: 'Building'
   },
   {
     id: 'kitchen',
     title: 'Big Commercial Kitchen',
-    description: 'Our spacious and fully equipped commercial kitchen is the heart of our catering excellence. Designed to handle large-scale events, it adheres to the highest hygiene standards and features modern culinary equipment. It provides the perfect space for professional chefs to prepare mouth-watering delicacies for your guests.',
+    description: 'Our spacious commercial kitchen is the heart of our catering excellence. Designed to handle large-scale events, it adheres to the highest hygiene standards and features modern culinary equipment. It provides the perfect space for professional chefs to prepare mouth-watering delicacies for your guests.',
     images: [
       facilityKitchen,
       facilityKitchen,
@@ -84,7 +81,6 @@ export const facilitiesData = [
     features: [
       'Large Cooking Area',
       'Highest Hygiene Standards',
-      'Modern Kitchen Equipment',
       'Suitable for Large Event Catering',
       'Professional Food Preparation Space',
       'Separate Veg & Non-Veg Sections'
@@ -110,7 +106,7 @@ export const facilitiesData = [
       'Spacious Open Area',
       'Perfect for Evening Events'
     ],
-    capacity: 'Up to 500 Guests',
+    capacity: 'Up to 2000 Guests',
     tags: ['Wedding', 'Reception', 'Outdoor Event', 'Family Function'],
     amenities: ['Decoration', 'Open Air', 'Power Backup', 'Stage Setup'],
     value: 'Garden'
@@ -127,14 +123,13 @@ export const facilitiesData = [
     features: [
       'Secure Covered Parking',
       'Complimentary Valet Service',
-      'EV Charging Stations',
       '24/7 Security Personnel',
       'CCTV Surveillance',
       'Easy Access to Main Venues'
     ],
     capacity: '300+ Vehicles',
     tags: ['Convenience', 'Guest Service', 'Security'],
-    amenities: ['Parking', 'Security', 'Valet', 'EV Charging'],
+    amenities: ['Parking', 'Security', 'Valet'],
     value: 'Premium'
   }
 ];

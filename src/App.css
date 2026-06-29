@@ -47,6 +47,60 @@
   color: var(--text-primary);
 }
 
+.left-links li button {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.left-links li button:hover {
+  color: var(--text-primary);
+}
+
+.left-links li button.active-link {
+  color: var(--accent-color);
+  font-weight: 600;
+  position: relative;
+}
+
+.left-links li button.active-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--accent-color);
+  border-radius: 2px;
+}
+
+.navbar-sticky-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+}
+
+.navbar-sticky-wrapper.scrolled {
+  background: rgba(252, 250, 245, 0.95);
+  backdrop-filter: blur(12px);
+  padding: 1.5rem 5rem;
+  margin-left: -5rem;
+  width: calc(100% + 10rem);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 768px) {
+  .navbar-sticky-wrapper.scrolled {
+    padding: 1rem 2rem;
+    margin-left: -2rem;
+    width: calc(100% + 4rem);
+  }
+}
+
 .logo {
   text-align: center;
   flex: 1;
@@ -1179,3 +1233,6 @@ textarea.form-control {
     grid-template-columns: 1fr;
   }
 }
+. c u s t o m - t o a s t   {   p o s i t i o n :   a b s o l u t e ;   t o p :   - 5 0 p x ;   r i g h t :   0 ;   b a c k g r o u n d - c o l o r :   v a r ( - - a c c e n t - c o l o r ) ;   c o l o r :   w h i t e ;   p a d d i n g :   0 . 8 r e m   1 . 5 r e m ;   b o r d e r - r a d i u s :   8 p x ;   f o n t - s i z e :   0 . 9 r e m ;   f o n t - w e i g h t :   5 0 0 ;   b o x - s h a d o w :   0   1 0 p x   2 5 p x   r g b a ( 0 , 0 , 0 , 0 . 1 ) ;   z - i n d e x :   1 0 0 ;   }  
+ . s e c t i o n - h i g h l i g h t   {   a n i m a t i o n :   s u b t l e H i g h l i g h t   2 . 5 s   e a s e - i n - o u t ;   }   @ k e y f r a m e s   s u b t l e H i g h l i g h t   {   0 %   {   b a c k g r o u n d - c o l o r :   t r a n s p a r e n t ;   }   2 0 %   {   b a c k g r o u n d - c o l o r :   r g b a ( 9 7 ,   8 7 ,   1 4 3 ,   0 . 0 8 ) ;   }   1 0 0 %   {   b a c k g r o u n d - c o l o r :   t r a n s p a r e n t ;   }   }  
+ 
