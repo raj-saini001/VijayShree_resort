@@ -13,6 +13,8 @@ import facilityKitchen from './assets/facility_kitchen.png';
 import FacilityDetailsModal from './components/modals/FacilityDetailsModal';
 import { useFacilityModal } from './hooks/useFacilityModal';
 import { useNavbarVisibility } from './hooks/useNavbarVisibility';
+import Footer from './components/footer/Footer';
+import MobileMenu from './components/navbar/MobileMenu';
 
 const SECTION_IDS = ['home', 'about', 'facilities', 'pricing', 'contact'];
 
@@ -96,27 +98,6 @@ function App() {
   const { isVisible, isAtTop } = useNavbarVisibility();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    
-    const handleEsc = (e) => {
-      if (e.key === 'Escape') setIsMobileMenuOpen(false);
-    };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [isMobileMenuOpen]);
-
-  const handleMobileNavClick = (index) => {
-    setIsMobileMenuOpen(false);
-    setTimeout(() => {
-      scrollToSection(index);
-    }, 100);
-  };
-  
   const handleBookingSubmit = (e) => {
     e.preventDefault();
     setIsSubmitted(true);
@@ -239,76 +220,12 @@ function App() {
         </button>
       </motion.nav>
 
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div 
-            className="mobile-menu-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={(e) => {
-              if (e.target.classList.contains('mobile-menu-overlay')) {
-                setIsMobileMenuOpen(false);
-              }
-            }}
-          >
-            <motion.div 
-              className="mobile-menu-panel"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <button 
-                className="close-menu-btn"
-                onClick={() => setIsMobileMenuOpen(false)}
-                aria-label="Close mobile menu"
-              >
-                <X size={32} color="var(--text-primary)" />
-              </button>
-              
-              <ul className="mobile-nav-links">
-                <li>
-                  <button 
-                    className={activeSection === 0 ? 'active-link' : ''} 
-                    onClick={() => handleMobileNavClick(0)}
-                  >HOME</button>
-                </li>
-                <li>
-                  <button 
-                    className={activeSection === 1 ? 'active-link' : ''} 
-                    onClick={() => handleMobileNavClick(1)}
-                  >ABOUT</button>
-                </li>
-                <li>
-                  <button 
-                    className={activeSection === 2 ? 'active-link' : ''} 
-                    onClick={() => handleMobileNavClick(2)}
-                  >FACILITIES</button>
-                </li>
-                <li>
-                  <button 
-                    className={activeSection === 3 ? 'active-link' : ''} 
-                    onClick={() => handleMobileNavClick(3)}
-                  >PACKAGES</button>
-                </li>
-                <li>
-                  <button 
-                    className={activeSection === 4 ? 'active-link' : ''} 
-                    onClick={() => handleMobileNavClick(4)}
-                  >ENQUIRE</button>
-                </li>
-              </ul>
-              
-              <div className="mobile-menu-footer">
-                <p>Reserve Your Venue</p>
-                <a href="tel:1-800-123-4567" className="phone">7974119727</a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <MobileMenu 
+        isOpen={isMobileMenuOpen} 
+        onClose={() => setIsMobileMenuOpen(false)} 
+        activeSection={activeSection} 
+        scrollToSection={scrollToSection} 
+      />
 
       <main className="hero" id="home">
         <div className="carousel-indicator-spacer" style={{ width: '50px' }}></div>
@@ -762,7 +679,7 @@ function App() {
                       <option value="">Select a Package</option>
                       <option value="Building">Building Package – ₹21,000</option>
                       <option value="Garden">Garden Package – ₹21,000</option>
-                      <option value="Premium">Premium Celebration Package – ₹31,000</option>
+                      <option value="Premium">Premium Celebration Package -₹31,000</option>
                       <option value="Custom">Need a Custom Package</option>
                     </select>
                   </div>
@@ -794,16 +711,7 @@ function App() {
         </motion.div>
       </section>
 
-      <footer className="footer">
-        <div className="language-selector">
-          <span className="active"></span> &nbsp;&nbsp; <span></span>
-        </div>
-        <div className="social-links">
-          <a href="#facebook">Instagram</a>
-          <a href="#twitter">WhatsApp</a>
-          <a href="#instagram">Gmail</a>
-        </div>
-      </footer>
+      <Footer scrollToSection={scrollToSection} />
     </div>
     </>
   );
