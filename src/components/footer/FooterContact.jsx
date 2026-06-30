@@ -11,7 +11,7 @@ const FooterContact = () => {
         <span>
           Vijay Shree Resort<br/>
           KhatyaKhedi Road, Pipliya Mandi,<br/>
-          Mandsaur, M. P.
+          Mandsaur, M.P.
         </span>
       </div>
       
