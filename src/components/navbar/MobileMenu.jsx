@@ -101,7 +101,7 @@ const MobileMenu = ({
                 </div>
                 <div className="mobile-contact-item">
                   <MapPin size={16} className="icon" />
-                  <span>Main Road, City Name, State</span>
+                  <span>KhatyaKhedi Road, Pipliya Mandi, M. P.</span>
                 </div>
                 <div className="mobile-contact-item">
                   <Clock size={16} className="icon" />
