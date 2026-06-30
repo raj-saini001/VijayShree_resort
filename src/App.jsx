@@ -98,9 +98,40 @@ function App() {
   const { isVisible, isAtTop } = useNavbarVisibility();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleBookingSubmit = (e) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError('');
+
+    try {
+      const formData = new FormData(e.target);
+      formData.append("access_key", import.meta.env.VITE_WEB3FORMS_ACCESS_KEY);
+      formData.append("subject", "New Enquiry from Website");
+      formData.append("from_name", "Vijay Shree Resort Website");
+
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setIsSubmitted(true);
+        e.target.reset();
+        setSelectedPackage('');
+        setAdditionalRequirements('');
+      } else {
+        setSubmitError("Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      setSubmitError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBookFacility = (packageValue) => {
@@ -630,30 +661,36 @@ function App() {
                 <h3 className="booking-form-title">Enquire Now</h3>
                 <p className="booking-form-subtitle">Fill in the details below and our event managers will get back to you.</p>
                 
+                {submitError && (
+                  <div style={{ color: '#d9534f', backgroundColor: '#fdf7f7', padding: '10px', borderRadius: '4px', marginBottom: '15px', fontSize: '0.9rem', border: '1px solid #f5c6cb' }}>
+                    {submitError}
+                  </div>
+                )}
+
                 <div className="form-grid">
                   <div className="form-group">
                     <label>Full Name *</label>
-                    <input type="text" className="form-control" placeholder="John Doe" required ref={nameInputRef} />
+                    <input type="text" name="name" className="form-control" placeholder="John Doe" required ref={nameInputRef} />
                   </div>
                   
                   <div className="form-group">
                     <label>Mobile Number *</label>
-                    <input type="tel" className="form-control" placeholder="+91 XXXXX XXXXX" required />
+                    <input type="tel" name="phone" className="form-control" placeholder="+91 XXXXX XXXXX" required />
                   </div>
                   
                   <div className="form-group">
                     <label>Email Address</label>
-                    <input type="email" className="form-control" placeholder="john@example.com" />
+                    <input type="email" name="email" className="form-control" placeholder="john@example.com" />
                   </div>
                   
                   <div className="form-group">
                     <label>Event Date</label>
-                    <input type="date" className="form-control" />
+                    <input type="date" name="event_date" className="form-control" />
                   </div>
                   
                   <div className="form-group">
                     <label>Event Type</label>
-                    <select className="form-control">
+                    <select name="event_type" className="form-control">
                       <option value="">Select an Event</option>
                       <option value="Wedding">Wedding</option>
                       <option value="Reception">Reception</option>
@@ -666,12 +703,13 @@ function App() {
                   
                   <div className="form-group">
                     <label>Number of Guests</label>
-                    <input type="number" className="form-control" placeholder="e.g. 200" />
+                    <input type="number" name="guests" className="form-control" placeholder="e.g. 200" />
                   </div>
                   
                   <div className="form-group full-width">
                     <label>Package Selection</label>
                     <select 
+                      name="package"
                       className="form-control"
                       value={selectedPackage}
                       onChange={(e) => setSelectedPackage(e.target.value)}
@@ -687,6 +725,7 @@ function App() {
                   <div className="form-group full-width">
                     <label>Additional Requirements</label>
                     <textarea 
+                      name="requirements"
                       className="form-control" 
                       placeholder="Tell us more about your event..." 
                       rows="3"
@@ -697,12 +736,14 @@ function App() {
                 </div>
                 
                 <div className="form-checkbox">
-                  <input type="checkbox" id="agree" required />
+                  <input type="checkbox" id="agree" name="agree" required />
                   <label htmlFor="agree">I agree to be contacted regarding my enquiry.</label>
                 </div>
                 
-                <button type="submit" className="cta-btn booking-submit-btn">
-                  Send Enquiry
+                <input type="hidden" name="redirect" value="" />
+                
+                <button type="submit" className="cta-btn booking-submit-btn" disabled={isSubmitting}>
+                  {isSubmitting ? 'Sending...' : 'Send Enquiry'}
                 </button>
               </form>
             )}
